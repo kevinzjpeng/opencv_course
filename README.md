@@ -1,2 +1,3 @@
 # opencv_course
-OpenCV Course
+
+This is the opencv course example notebook.

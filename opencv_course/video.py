@@ -22,7 +22,7 @@ class Camera(SingletonConfigurable):
         super(Camera, self).__init__(*args, **kwargs)
 
         try:
-            self.cap = cv2.VideoCapture(0)
+            self.cap = cv2.VideoCapture(1)
             re, image = self.cap.read()
 
             if not re:
@@ -44,7 +44,7 @@ class Camera(SingletonConfigurable):
                 self.value = image
             else:
                 break
-                
+    #for Nvidia jetson nano           
     def _gst_str(self):
         return 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=%d, height=%d, format=(string)NV12, framerate=(fraction)%d/1 ! nvvidconv ! video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! videoconvert ! appsink' % (
                 self.capture_width, self.capture_height, self.fps, self.width, self.height)
@@ -109,7 +109,7 @@ class Video(SingletonConfigurable):
                     break
             except:
                 print('Error')
-                
+    #for Nvidia Jetson nano              
     def _gst_str(self):
         return 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=%d, height=%d, format=(string)NV12, framerate=(fraction)%d/1 ! nvvidconv ! video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! videoconvert ! appsink' % (
                 self.capture_width, self.capture_height, self.fps, self.width, self.height)
