@@ -16,15 +16,27 @@ class Camera(SingletonConfigurable):
     fps = traitlets.Integer(default_value=21).tag(config=True)
     capture_width = traitlets.Integer(default_value=3280).tag(config=True)
     capture_height = traitlets.Integer(default_value=2464).tag(config=True)
-
+    is_usb = False
+    
     def __init__(self, *args, **kwargs):
         self.value = np.empty((self.height, self.width, 2), dtype=np.uint8)
         super(Camera, self).__init__(*args, **kwargs)
 
         try:
+<<<<<<< HEAD
             self.cap = cv2.VideoCapture(1)
             re, image = self.cap.read()
 
+=======
+            self.cap = cv2.VideoCapture()
+            if is_usb:
+                re, image = self.cap.read(0)
+            else:
+                re, image = self.cap.read(self._gst_str(), cv2.CAP_GSTREAMER)
+            
+            
+    
+>>>>>>> f80cf054778e439459ae916d80f231185f8cfa57
             if not re:
                 raise RuntimeError('Could not read image from camera.')
 
