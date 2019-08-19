@@ -13,33 +13,43 @@ class Camera(SingletonConfigurable):
     # config
     width = traitlets.Integer(default_value=224).tag(config=True)
     height = traitlets.Integer(default_value=224).tag(config=True)
-    fps = traitlets.Integer(default_value=21).tag(config=True)
+    fps = traitlets.Float(default_value=2.0).tag(config=True)
     capture_width = traitlets.Integer(default_value=3280).tag(config=True)
     capture_height = traitlets.Integer(default_value=2464).tag(config=True)
-    is_usb = False
+    is_usb = traitlets.Bool(default_value=False).tag(config=True)
+    brightness = traitlets.Float(default_value=10.0).tag(config=True)
     
     def __init__(self, *args, **kwargs):
-        self.value = np.empty((self.height, self.width, 2), dtype=np.uint8)
         super(Camera, self).__init__(*args, **kwargs)
+        self.value = np.empty((self.height, self.width, 2), dtype=np.uint8)
 
         try:
-<<<<<<< HEAD
-            self.cap = cv2.VideoCapture(1)
-            re, image = self.cap.read()
-
-=======
-            self.cap = cv2.VideoCapture()
-            if is_usb:
-                re, image = self.cap.read(0)
+            if self.is_usb:
+                self.cap = cv2.VideoCapture(1)
+#                 self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
+                if self.fps != 2.0:
+                    self.cap.set(cv2.CAP_PROP_FPS, self.fps)
+                self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+                self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
             else:
-                re, image = self.cap.read(self._gst_str(), cv2.CAP_GSTREAMER)
+                self.cap = cv2.VideoCapture(self._gst_str(), cv2.CAP_GSTREAMER)
             
+            print("w:{}, h:{}, fps:{}, brightness:{}, contrast:{}, zoom:{}".format(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH),
+                                                             self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT), 
+                                                             self.cap.get(cv2.CAP_PROP_FPS), 
+                                                             self.cap.get(cv2.CAP_PROP_BRIGHTNESS),
+                                                             self.cap.get(cv2.CAP_PROP_CONTRAST),
+                                                             self.cap.get(cv2.CAP_PROP_ZOOM)))
+            re, image = self.cap.read()
+            print("h, w: {}, {}".format(image.shape[0], image.shape[1]))
             
-    
->>>>>>> f80cf054778e439459ae916d80f231185f8cfa57
             if not re:
                 raise RuntimeError('Could not read image from camera.')
 
+#             if self.is_usb:
+#                 image = cv2.resize(image, (int(self.width), int(self.height)))
+            
+            self.camera = self
             self.value = image
             self.start()
         except:
@@ -53,10 +63,12 @@ class Camera(SingletonConfigurable):
         while True:
             re, image = self.cap.read()
             if re:
+#                 if self.is_usb:
+#                     image = cv2.resize(image, (int(self.width), int(self.height)))
                 self.value = image
             else:
                 break
-    #for Nvidia jetson nano           
+                
     def _gst_str(self):
         return 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=%d, height=%d, format=(string)NV12, framerate=(fraction)%d/1 ! nvvidconv ! video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! videoconvert ! appsink' % (
                 self.capture_width, self.capture_height, self.fps, self.width, self.height)
@@ -76,9 +88,7 @@ class Camera(SingletonConfigurable):
             
     def restart(self):
         self.stop()
-        self.start()
-        
-        
+        self.start()         
         
 class Video(SingletonConfigurable):
     
@@ -102,6 +112,7 @@ class Video(SingletonConfigurable):
             if not re:
                 raise RuntimeError('Could not read image from camera.')
 
+#             image = cv2.resize(image, (image.shape[0]//9.4426, image.shape[1]//9.4426))
             self.value = image
             self.start()
         except:
@@ -116,12 +127,14 @@ class Video(SingletonConfigurable):
             try:
                 re, image = self.cap.read()
                 if re:
+                    image = image[0:int(image.shape[0]/3), 0:int(image.shape[1]/3)]
+#                     image = cv2.resize(image, (image.shape[0]//4.72, image.shape[1]//4.72))
                     self.value = image
                 else:
                     break
             except:
                 print('Error')
-    #for Nvidia Jetson nano              
+                
     def _gst_str(self):
         return 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=%d, height=%d, format=(string)NV12, framerate=(fraction)%d/1 ! nvvidconv ! video/x-raw, width=(int)%d, height=(int)%d, format=(string)BGRx ! videoconvert ! appsink' % (
                 self.capture_width, self.capture_height, self.fps, self.width, self.height)
