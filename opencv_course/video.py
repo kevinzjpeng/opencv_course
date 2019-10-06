@@ -18,6 +18,10 @@ class Camera(SingletonConfigurable):
     capture_height = traitlets.Integer(default_value=2464).tag(config=True)
     is_usb = traitlets.Bool(default_value=False).tag(config=True)
     brightness = traitlets.Float(default_value=10.0).tag(config=True)
+<<<<<<< HEAD
+=======
+    device = traitlets.Integer(default_value=0).tag(config=True)
+>>>>>>> b594cb1ec52e8156cc6718d61b4d3f07165d09e1
     
     def __init__(self, *args, **kwargs):
         super(Camera, self).__init__(*args, **kwargs)
@@ -31,7 +35,7 @@ class Camera(SingletonConfigurable):
                 self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
                 self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
             else:
-                self.cap = cv2.VideoCapture(self._gst_str(), cv2.CAP_GSTREAMER)
+                self.cap = cv2.VideoCapture(0)
             
             print("w:{}, h:{}, fps:{}, brightness:{}, contrast:{}, zoom:{}".format(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH),
                                                              self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT), 
@@ -41,8 +45,11 @@ class Camera(SingletonConfigurable):
                                                              self.cap.get(cv2.CAP_PROP_ZOOM)))
             re, image = self.cap.read()
             print("h, w: {}, {}".format(image.shape[0], image.shape[1]))
+<<<<<<< HEAD
             
             re, image = self.cap.read()
+=======
+>>>>>>> b594cb1ec52e8156cc6718d61b4d3f07165d09e1
     
             if not re:
                 raise RuntimeError('Could not read image from camera.')

@@ -1,10 +1,8 @@
 .DS_Store
 .ipynb_checkpoints/
-<<<<<<< HEAD
+.idea
 *.caffemodel
 *.prototxt
-=======
 *.caffemodel*
 *.prototxt*
->>>>>>> f80cf054778e439459ae916d80f231185f8cfa57
 *.pyc
