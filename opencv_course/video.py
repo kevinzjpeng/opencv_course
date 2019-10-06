@@ -19,7 +19,7 @@ class Camera(SingletonConfigurable):
     is_usb = traitlets.Bool(default_value=False).tag(config=True)
     brightness = traitlets.Float(default_value=10.0).tag(config=True)
     device = traitlets.Integer(default_value=0).tag(config=True)
-    
+
     def __init__(self, *args, **kwargs):
         super(Camera, self).__init__(*args, **kwargs)
         self.value = np.empty((self.height, self.width, 2), dtype=np.uint8)
@@ -32,7 +32,7 @@ class Camera(SingletonConfigurable):
                 self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
                 self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
             else:
-                self.cap = cv2.VideoCapture(0)
+                self.cap = cv2.VideoCapture(self._gst_str(), cv2.CAP_GSTREAMER)
             
             print("w:{}, h:{}, fps:{}, brightness:{}, contrast:{}, zoom:{}".format(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH),
                                                              self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT), 
