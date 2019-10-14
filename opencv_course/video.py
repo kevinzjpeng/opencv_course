@@ -11,8 +11,8 @@ class Camera(SingletonConfigurable):
     value = traitlets.Any()
     
     # config
-    width = traitlets.Integer(default_value=224).tag(config=True)
-    height = traitlets.Integer(default_value=224).tag(config=True)
+    width = traitlets.Float(default_value=224.0).tag(config=True)
+    height = traitlets.Float(default_value=224.0).tag(config=True)
     fps = traitlets.Float(default_value=2.0).tag(config=True)
     capture_width = traitlets.Integer(default_value=3280).tag(config=True)
     capture_height = traitlets.Integer(default_value=2464).tag(config=True)
@@ -91,7 +91,7 @@ class Video(SingletonConfigurable):
     # config
     width = traitlets.Integer(default_value=224).tag(config=True)
     height = traitlets.Integer(default_value=224).tag(config=True)
-    fps = traitlets.Integer(default_value=21).tag(config=True)
+    fps = traitlets.Float(default_value=21).tag(config=True)
     capture_width = traitlets.Integer(default_value=3280).tag(config=True)
     capture_height = traitlets.Integer(default_value=2464).tag(config=True)
 
@@ -101,18 +101,18 @@ class Video(SingletonConfigurable):
 
         try:
             self.cap = cv2.VideoCapture(self.file)
+            self.fps = self.cap.get(cv2.CAP_PROP_FPS)
             re, image = self.cap.read()
 
             if not re:
-                raise RuntimeError('Could not read image from camera.')
+                raise RuntimeError('Could not read image from video.')
 
-#             image = cv2.resize(image, (image.shape[0]//9.4426, image.shape[1]//9.4426))
             self.value = image
             self.start()
         except:
             self.stop()
             raise RuntimeError(
-                'Could not initialize camera.  Please see error trace.')
+                'Could not initialize video.  Please see error trace.')
 
         atexit.register(self.stop)
 
@@ -121,8 +121,7 @@ class Video(SingletonConfigurable):
             try:
                 re, image = self.cap.read()
                 if re:
-                    image = image[0:int(image.shape[0]/3), 0:int(image.shape[1]/3)]
-#                     image = cv2.resize(image, (image.shape[0]//4.72, image.shape[1]//4.72))
+#                     image = image[0:int(image.shape[0]), 0:int(image.shape[1])]
                     self.value = image
                 else:
                     break
