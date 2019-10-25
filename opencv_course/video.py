@@ -22,11 +22,7 @@ class Camera(SingletonConfigurable):
 
     def __init__(self, *args, **kwargs):
         super(Camera, self).__init__(*args, **kwargs)
-<<<<<<< HEAD
         self.value = np.empty((int(self.height), int(self.width), 2), dtype=np.uint8)
-=======
-        self.value = np.empty((self.height, self.width, 2), dtype=np.uint8)
->>>>>>> 93ad9fd8e09eb071d94136d7937f91f8084ff202
 
         try:
             if self.is_usb:
@@ -93,23 +89,17 @@ class Video(SingletonConfigurable):
     value = traitlets.Any()
     
     # config
-<<<<<<< HEAD
+
     width = traitlets.Float(default_value=224).tag(config=True)
     height = traitlets.Float(default_value=224).tag(config=True)
-=======
-    width = traitlets.Integer(default_value=224).tag(config=True)
-    height = traitlets.Integer(default_value=224).tag(config=True)
->>>>>>> 93ad9fd8e09eb071d94136d7937f91f8084ff202
+
     fps = traitlets.Float(default_value=21).tag(config=True)
     capture_width = traitlets.Integer(default_value=3280).tag(config=True)
     capture_height = traitlets.Integer(default_value=2464).tag(config=True)
 
     def __init__(self, *args, **kwargs):
-<<<<<<< HEAD
         self.value = np.empty((int(self.height), int(self.width), 2), dtype=np.uint8)
-=======
-        self.value = np.empty((self.height, self.width, 2), dtype=np.uint8)
->>>>>>> 93ad9fd8e09eb071d94136d7937f91f8084ff202
+
         super(Video, self).__init__(*args, **kwargs)
 
         try:
