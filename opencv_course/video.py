@@ -22,7 +22,10 @@ class Camera(SingletonConfigurable):
 
     def __init__(self, *args, **kwargs):
         super(Camera, self).__init__(*args, **kwargs)
+<<<<<<< HEAD
 
+=======
+>>>>>>> ab03218943a679f3f2188e12dfe8be241fef184d
         self.value = np.empty((int(self.height), int(self.width), 2), dtype=np.uint8)
 
         try:
@@ -90,15 +93,26 @@ class Video(SingletonConfigurable):
     value = traitlets.Any()
     
     # config
+<<<<<<< HEAD
     width = traitlets.Float(default_value=224).tag(config=True)
     height = traitlets.Float(default_value=224).tag(config=True)
     
+=======
+
+    width = traitlets.Float(default_value=224).tag(config=True)
+    height = traitlets.Float(default_value=224).tag(config=True)
+
+>>>>>>> ab03218943a679f3f2188e12dfe8be241fef184d
     fps = traitlets.Float(default_value=21).tag(config=True)
     capture_width = traitlets.Integer(default_value=3280).tag(config=True)
     capture_height = traitlets.Integer(default_value=2464).tag(config=True)
 
     def __init__(self, *args, **kwargs):
         self.value = np.empty((int(self.height), int(self.width), 2), dtype=np.uint8)
+<<<<<<< HEAD
+=======
+
+>>>>>>> ab03218943a679f3f2188e12dfe8be241fef184d
         super(Video, self).__init__(*args, **kwargs)
 
         try:
